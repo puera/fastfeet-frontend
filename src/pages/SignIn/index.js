@@ -1,7 +1,19 @@
 import React from 'react';
 
-// import { Container } from './styles';
+import logo from '~/assets/img/fastfeet-logo.png';
 
 export default function SignIn() {
-  return <div>SignIn</div>;
+  return (
+    <>
+      <img src={logo} alt="FastFeet" />
+      <form>
+        <strong>SEU EMAIL</strong>
+        <input type="email" placeholder="exemplo@email.com" />
+        <strong>SUA SENHA</strong>
+        <input type="password" placeholder="************" />
+
+        <button type="button">Entrar no sistema</button>
+      </form>
+    </>
+  );
 }
