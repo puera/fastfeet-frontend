@@ -32,7 +32,7 @@ export default function SignIn() {
         <strong>SUA SENHA</strong>
         <Input name="password" type="password" placeholder="***********" />
 
-        <Button loading={loading}>
+        <Button loading={loading ? 1 : 0}>
           {loading ? <Spinner /> : 'Entrar no sistema'}
         </Button>
       </Form>
