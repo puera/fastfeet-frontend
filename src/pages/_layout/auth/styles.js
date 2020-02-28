@@ -19,7 +19,7 @@ export const Content = styled.div`
   border-radius: 4px;
 
   img {
-    margin: 40px;
+    margin-top: 40px;
   }
 
   form {
@@ -34,6 +34,13 @@ export const Content = styled.div`
       font-size: 16px;
     }
 
+    span {
+      color: #fb6f91;
+      align-self: center;
+      margin: 10px 0 10px;
+      font-weight: bold;
+    }
+
     input {
       background: #fff;
       border: 1px solid #eee;
@@ -44,10 +51,9 @@ export const Content = styled.div`
     }
 
     button {
-      margin: 5px 0 0;
       height: 44px;
       width: 300px;
-      margin-top: 15px;
+      margin-top: 20px;
       align-self: center;
       background: #7159c1;
       font-weight: bold;
