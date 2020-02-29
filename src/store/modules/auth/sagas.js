@@ -22,6 +22,7 @@ export function* signIn({ payload }) {
     yield put(signInSuccess(token, user));
 
     history.push('/dashboard');
+    toast.info('Logado com sucesso!');
   } catch (error) {
     yield put(signInFailure());
     toast.error('Falha na autenticação, verifique seus dados');
@@ -38,7 +39,13 @@ export function setToken({ payload }) {
   }
 }
 
+export function signOut() {
+  history.push('/');
+  toast.info('Deslogado do sistema com sucesso!');
+}
+
 export default all([
   takeLatest('persist/REHYDRATE', setToken),
   takeLatest('@auth/SIGN_IN_REQUEST', signIn),
+  takeLatest('@auth/SIGN_OUT', signOut),
 ]);
