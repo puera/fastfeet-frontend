@@ -19,7 +19,7 @@ export default function Header() {
     <Container>
       <Content>
         <Menu>
-          <LinkMenu to="/dashboard">
+          <LinkMenu to="/deliveries">
             <img src={logo} alt="FastFeet" />
           </LinkMenu>
           <nav>

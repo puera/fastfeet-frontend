@@ -21,7 +21,7 @@ export function* signIn({ payload }) {
 
     yield put(signInSuccess(token, user));
 
-    history.push('/dashboard');
+    history.push('/deliveries');
     toast.info('Logado com sucesso!');
   } catch (error) {
     yield put(signInFailure());
