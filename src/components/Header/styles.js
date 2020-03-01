@@ -9,9 +9,6 @@ export const Container = styled.div`
 
 export const Content = styled.div`
   height: 64px;
-  max-height: 100%;
-  max-width: 100%;
-  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -39,15 +36,15 @@ export const Profile = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-left: 15px;
+  padding: 0 15px;
 
   strong {
-    display: block;
     padding-bottom: 10px;
     color: #333;
   }
 
   button {
+    margin-top: 5px;
     border: 0;
     background: none;
     color: red;

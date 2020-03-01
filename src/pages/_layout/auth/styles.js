@@ -10,12 +10,12 @@ export const Wrapper = styled.div`
 
 export const Content = styled.div`
   width: 100%;
-  height: 100%;
-  max-height: 450px;
+  min-height: 394px;
   max-width: 350px;
   text-align: center;
   background: #fff;
   border-radius: 4px;
+  padding-bottom: 27px;
 
   img {
     margin-top: 40px;
@@ -29,7 +29,7 @@ export const Content = styled.div`
 
     strong {
       align-self: flex-start;
-      padding: 15px 15px;
+      padding: 15px 28px;
       font-size: 16px;
     }
 
