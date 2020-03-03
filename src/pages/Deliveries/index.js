@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdRemoveRedEye, MdEdit, MdDeleteForever } from 'react-icons/md';
 
 import { Status } from './styles';
+import api from '~/services/api';
 
 import Table from '~/components/Table';
 import ActionMenu from '~/components/ActionMenu';
 
 const actions = [
   {
-    link: 'deliveries',
+    link: 'deliverymans',
     title: 'Visualizar',
     icon: <MdRemoveRedEye color="#8E5BE8" size={16} />,
   },
@@ -34,60 +35,77 @@ const colunn = [
   'Ações',
 ];
 
-const data = [
-  [
-    '#01',
-    'Jonas',
-    'Renann',
-    'Búzios',
-    'RJ',
-    <Status color="#2CA42B">
-      <span>ENTREGUE</span>
-    </Status>,
-    <ActionMenu actions={actions} />,
-  ],
-  [
-    '#02',
-    'Rafaela',
-    'Sergio',
-    'Búzios',
-    'RJ',
-    <Status color="#C1BC35">
-      <span>PENDENTE</span>
-    </Status>,
-    <ActionMenu actions={actions} />,
-  ],
-  [
-    '#03',
-    'Ronaldo',
-    'Claudia',
-    'Búzios',
-    'RJ',
-    <Status color="#4D85EE">
-      <span>RETIRADA</span>
-    </Status>,
-    <ActionMenu actions={actions} />,
-  ],
-  [
-    '#04',
-    'Talles',
-    'Rafael',
-    'Búzios',
-    'RJ',
-    <Status color="#DE3B3B">
-      <span>CANCELADA</span>
-    </Status>,
-    <ActionMenu actions={actions} />,
-  ],
-];
-
 export default function Deliveries() {
+  const [deliveries, setDeliveries] = useState([]);
+  const [formattedDeliveries, setFormattedDeliveries] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  function renderStatus(status) {
+    let color;
+    let title;
+
+    switch (status) {
+      case 'waiting': {
+        color = '#C1BC35';
+        title = 'PENDENTE';
+        break;
+      }
+      case 'delivered': {
+        color = '#2CA42B';
+        title = 'ENTREGUE';
+        break;
+      }
+      case 'out': {
+        color = '#4D85EE';
+        title = 'RETIRADA';
+        break;
+      }
+      case 'canceled': {
+        color = '#DE3B3B';
+        title = 'CANCELADA';
+        break;
+      }
+      default:
+    }
+
+    return (
+      <Status color={color}>
+        <span>{title}</span>
+      </Status>
+    );
+  }
+
+  useEffect(() => {
+    async function loadDeliveries() {
+      setIsLoading(true);
+      const response = await api.get('deliveries');
+      setDeliveries(response.data);
+      setIsLoading(false);
+    }
+
+    loadDeliveries();
+  }, []);
+
+  useEffect(() => {
+    const data = deliveries.map(delivery => [
+      `#${delivery.id}`,
+      delivery.recipient.name,
+      delivery.deliveryman.name,
+      delivery.recipient.city || '',
+      delivery.recipient.state || '',
+      renderStatus(delivery.status),
+      <ActionMenu actions={actions} />,
+    ]);
+
+    setFormattedDeliveries(data);
+  }, [deliveries]);
   return (
     <Table
       title="Gerenciando Encomendas"
       placeholder="Buscar por encomendas"
       colunn={colunn}
-      data={data}
+      data={formattedDeliveries}
+      loading={isLoading}
     />
   );
 }
