@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { MdAdd } from 'react-icons/md';
 
-import { Container, Content } from './styles';
+import { Container, Content, Spinner } from './styles';
 
-export default function Table({ colunn, data, title, placeholder }) {
+export default function Table({ colunn, data, title, placeholder, loading }) {
   function renderHeader() {
     return (
       <thead>
@@ -40,10 +40,14 @@ export default function Table({ colunn, data, title, placeholder }) {
           CADASTRAR
         </button>
       </div>
-      <Content>
-        {renderHeader()}
-        {renderData()}
-      </Content>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <Content>
+          {renderHeader()}
+          {renderData()}
+        </Content>
+      )}
     </Container>
   );
 }
@@ -57,4 +61,5 @@ Table.propTypes = {
   ).isRequired,
   title: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
 };

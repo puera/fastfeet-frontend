@@ -1,4 +1,14 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { FaSpinner } from 'react-icons/fa';
+
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
 export const Container = styled.div`
   display: flex;
@@ -80,4 +90,13 @@ export const Content = styled.table`
       }
     }
   }
+`;
+
+export const Spinner = styled(FaSpinner).attrs({
+  color: '#B9B5B5',
+  size: 40,
+})`
+  animation: ${rotate} 2s linear infinite;
+  align-self: center;
+  margin-top: 50px;
 `;
