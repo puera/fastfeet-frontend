@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { MdRemoveRedEye, MdEdit, MdDeleteForever } from 'react-icons/md';
 
-import { Status } from './styles';
+import { Status, AvatarContainer } from './styles';
 import api from '~/services/api';
 
 import Table from '~/components/Table';
 import ActionMenu from '~/components/ActionMenu';
+import Avatar from '~/components/Avatar';
+import AvatarPlaceholder from '~/components/Avatar/AvatarPlaceholder';
+import shortenedName from '~/utils/shortenedName';
 
 const actions = [
   {
@@ -39,6 +42,25 @@ export default function Deliveries() {
   const [deliveries, setDeliveries] = useState([]);
   const [formattedDeliveries, setFormattedDeliveries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  function renderDeliveryman(name, avatar) {
+    if (avatar) {
+      return (
+        <AvatarContainer>
+          <Avatar url={avatar.url} />
+          <span>{name}</span>
+        </AvatarContainer>
+      );
+    }
+
+    const formatedShortenedName = shortenedName(name);
+    return (
+      <AvatarContainer>
+        <AvatarPlaceholder>{formatedShortenedName}</AvatarPlaceholder>
+        <span>{name}</span>
+      </AvatarContainer>
+    );
+  }
 
   function renderStatus(status) {
     let color;
@@ -90,7 +112,7 @@ export default function Deliveries() {
     const data = deliveries.map(delivery => [
       `#${delivery.id}`,
       delivery.recipient.name,
-      delivery.deliveryman.name,
+      renderDeliveryman(delivery.deliveryman.name, delivery.deliveryman.avatar),
       delivery.recipient.city || '',
       delivery.recipient.state || '',
       renderStatus(delivery.status),

@@ -2,14 +2,13 @@ import styled from 'styled-components';
 import { lighten } from 'polished';
 
 export const Status = styled.div`
-  background: ${props => lighten(0.3, props.color)};
-  width: 150px;
-  border-radius: 25px;
   span {
+    background: ${props => lighten(0.3, props.color)};
+    border-radius: 25px;
     display: flex;
     align-items: center;
     color: ${props => props.color};
-    padding: 3px 10px;
+    padding: 5px 0 5px 10px;
     font-weight: bold;
     &::before {
       content: '';
@@ -20,4 +19,9 @@ export const Status = styled.div`
       margin-right: 6px;
     }
   }
+`;
+
+export const AvatarContainer = styled.div`
+  display: flex;
+  align-items: center;
 `;
