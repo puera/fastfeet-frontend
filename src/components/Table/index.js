@@ -4,7 +4,14 @@ import { MdAdd } from 'react-icons/md';
 
 import { Container, Content, Spinner } from './styles';
 
-export default function Table({ colunn, data, title, placeholder, loading }) {
+export default function Table({
+  colunn,
+  data,
+  title,
+  inputPlaceholder,
+  inputHandleChange,
+  loading,
+}) {
   function renderHeader() {
     return (
       <thead>
@@ -34,7 +41,11 @@ export default function Table({ colunn, data, title, placeholder, loading }) {
     <Container>
       <h1>{title}</h1>
       <div>
-        <input type="text" placeholder={placeholder} />
+        <input
+          type="text"
+          placeholder={inputPlaceholder}
+          onKeyDown={inputHandleChange}
+        />
         <button type="button">
           <MdAdd color="#fff" size={20} />
           CADASTRAR
@@ -60,6 +71,7 @@ Table.propTypes = {
     )
   ).isRequired,
   title: PropTypes.string.isRequired,
-  placeholder: PropTypes.string.isRequired,
+  inputPlaceholder: PropTypes.string.isRequired,
+  inputHandleChange: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
 };

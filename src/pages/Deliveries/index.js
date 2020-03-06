@@ -62,6 +62,13 @@ export default function Deliveries() {
     );
   }
 
+  async function loadDeliveries(query) {
+    setIsLoading(true);
+    const response = await api.get(`deliveries?q=${query || ''}`);
+    setDeliveries(response.data);
+    setIsLoading(false);
+  }
+
   function renderStatus(status) {
     let color;
     let title;
@@ -98,13 +105,6 @@ export default function Deliveries() {
   }
 
   useEffect(() => {
-    async function loadDeliveries() {
-      setIsLoading(true);
-      const response = await api.get('deliveries');
-      setDeliveries(response.data);
-      setIsLoading(false);
-    }
-
     loadDeliveries();
   }, []);
 
@@ -121,13 +121,21 @@ export default function Deliveries() {
 
     setFormattedDeliveries(data);
   }, [deliveries]);
+
+  function inputChange(e) {
+    // checks if enter was pressed (code: 13)
+    if (e.keyCode === 13) {
+      loadDeliveries(e.target.value);
+    }
+  }
   return (
     <Table
       title="Gerenciando Encomendas"
-      placeholder="Buscar por encomendas"
+      inputPlaceholder="Buscar por encomendas"
       colunn={colunn}
       data={formattedDeliveries}
       loading={isLoading}
+      inputHandleChange={inputChange}
     />
   );
 }
