@@ -12,29 +12,26 @@ export default function Table({
   inputHandleChange,
   loading,
 }) {
-  function renderHeader() {
-    return (
-      <thead>
-        <tr>
-          {colunn.map(c => (
-            <th key={c}>{c}</th>
-          ))}
-        </tr>
-      </thead>
-    );
-  }
-
   function renderData() {
     return (
-      <tbody>
-        {data.map((item, index) => (
-          <tr key={`${item}_${String(index)}`}>
-            {item.map((i, tdIndex) => (
-              <td key={`${i}_${String(tdIndex)}`}>{i}</td>
+      <>
+        <thead>
+          <tr>
+            {colunn.map(c => (
+              <th key={c}>{c}</th>
             ))}
           </tr>
-        ))}
-      </tbody>
+        </thead>
+        <tbody>
+          {data.map((item, index) => (
+            <tr key={`${item}_${String(index)}`}>
+              {item.map((i, tdIndex) => (
+                <td key={`${i}_${String(tdIndex)}`}>{i}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </>
     );
   }
   return (
@@ -54,10 +51,13 @@ export default function Table({
       {loading ? (
         <Spinner />
       ) : (
-        <Content>
-          {renderHeader()}
-          {renderData()}
-        </Content>
+        <>
+          {data.length ? (
+            <Content>{renderData()}</Content>
+          ) : (
+            <h1>Nenhum dado a ser mostrado</h1>
+          )}
+        </>
       )}
     </Container>
   );

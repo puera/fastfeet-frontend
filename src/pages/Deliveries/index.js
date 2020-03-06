@@ -55,8 +55,13 @@ export default function Deliveries() {
 
   async function loadDeliveries(query) {
     setIsLoading(true);
-    const response = await api.get(`deliveries?q=${query || ''}`);
-    setDeliveries(response.data);
+    try {
+      const response = await api.get(`deliveries?q=${query || ''}`);
+      setDeliveries(response.data);
+    } catch (error) {
+      toast.error('API Error');
+      console.tron.error(error);
+    }
     setIsLoading(false);
   }
 
@@ -99,6 +104,7 @@ export default function Deliveries() {
     // checks if enter was pressed (code: 13)
     if (e.keyCode === 13) {
       loadDeliveries(e.target.value);
+      e.target.value = '';
     }
   }
 
@@ -179,7 +185,7 @@ export default function Deliveries() {
         title="Informações da encomenda"
         closeHandler={() => setIsModalOpened(false)}
       >
-        {deliveryDetails}
+        {deliveryDetails || <></>}
       </GlobalModal>
       <Table
         title="Gerenciando Encomendas"
