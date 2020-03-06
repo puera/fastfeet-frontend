@@ -36,7 +36,8 @@ export const Action = styled.div`
   & + div {
     border-top: 2px solid #eee;
   }
-  a {
+  a,
+  button {
     display: flex;
     align-items: center;
     color: #999;
@@ -51,5 +52,10 @@ export const Action = styled.div`
     svg {
       margin: auto 7px;
     }
+  }
+
+  button {
+    background: none;
+    border: 0;
   }
 `;

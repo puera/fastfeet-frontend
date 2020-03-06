@@ -1,32 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { MdRemoveRedEye, MdEdit, MdDeleteForever } from 'react-icons/md';
+import { toast } from 'react-toastify';
 
 import { Status, AvatarContainer } from './styles';
+
+import shortenedName from '~/utils/shortenedName';
+
 import api from '~/services/api';
 
+import GlobalModal from '~/components/GlobalModal';
 import Table from '~/components/Table';
 import ActionMenu from '~/components/ActionMenu';
 import Avatar from '~/components/Avatar';
 import AvatarPlaceholder from '~/components/Avatar/AvatarPlaceholder';
-import shortenedName from '~/utils/shortenedName';
 
-const actions = [
-  {
-    link: 'deliverymans',
-    title: 'Visualizar',
-    icon: <MdRemoveRedEye color="#8E5BE8" size={16} />,
-  },
-  {
-    link: 'deliveries',
-    title: 'Editar',
-    icon: <MdEdit color="#4D85EE" size={16} />,
-  },
-  {
-    link: 'deliveries',
-    title: 'Excluir',
-    icon: <MdDeleteForever color="#DE3B3B" size={16} />,
-  },
-];
+import { renderVisualizeModal } from './Modal';
 
 const colunn = [
   'ID',
@@ -42,6 +30,9 @@ export default function Deliveries() {
   const [deliveries, setDeliveries] = useState([]);
   const [formattedDeliveries, setFormattedDeliveries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpened, setIsModalOpened] = useState(false);
+  const [deliveryId, setDeliveryId] = useState();
+  const [deliveryDetails, setDeliveryDetails] = useState();
 
   function renderDeliveryman(name, avatar) {
     if (avatar) {
@@ -104,11 +95,58 @@ export default function Deliveries() {
     );
   }
 
-  useEffect(() => {
-    loadDeliveries();
-  }, []);
+  function inputChange(e) {
+    // checks if enter was pressed (code: 13)
+    if (e.keyCode === 13) {
+      loadDeliveries(e.target.value);
+    }
+  }
 
-  useEffect(() => {
+  useMemo(() => {
+    function visualizeButtonClickedHandler(id) {
+      setDeliveryId(id);
+      setIsModalOpened(true);
+    }
+
+    async function deleteButtonClickedHandler(id) {
+      try {
+        if (window.confirm('Deseja mesmo deletar esta encomenda?')) {
+          await api.delete(`deliveries/${id}`);
+          toast.success('Encomenda excluída com sucesso!');
+          loadDeliveries();
+        }
+      } catch (error) {
+        toast.error('Erro ao excluir encomenda.');
+      }
+    }
+
+    function renderActions(id, status) {
+      const data = [
+        {
+          title: 'Visualizar',
+          icon: <MdRemoveRedEye color="#8E5BE8" size={16} />,
+          type: 'button',
+          onClickButtonHandler: () => visualizeButtonClickedHandler(id),
+        },
+        {
+          title: 'Excluir',
+          icon: <MdDeleteForever color="#DE3B3B" size={16} />,
+          type: 'button',
+          onClickButtonHandler: () => deleteButtonClickedHandler(id),
+        },
+      ];
+
+      if (status !== 'delivered' && status !== 'canceled') {
+        data.splice(1, 0, {
+          link: `/deliveries/form/${id}`,
+          title: 'Editar',
+          icon: <MdEdit color="#4D85EE" size={16} />,
+        });
+      }
+
+      return data;
+    }
+
     const data = deliveries.map(delivery => [
       `#${delivery.id}`,
       delivery.recipient.name,
@@ -116,26 +154,41 @@ export default function Deliveries() {
       delivery.recipient.city || '',
       delivery.recipient.state || '',
       renderStatus(delivery.status),
-      <ActionMenu actions={actions} />,
+      <ActionMenu actions={renderActions(delivery.id, delivery.status)} />,
     ]);
 
     setFormattedDeliveries(data);
   }, [deliveries]);
 
-  function inputChange(e) {
-    // checks if enter was pressed (code: 13)
-    if (e.keyCode === 13) {
-      loadDeliveries(e.target.value);
-    }
-  }
+  useEffect(() => {
+    if (deliveryId === null || isModalOpened === false) return;
+
+    const delivery = deliveries.find(d => d.id === deliveryId);
+
+    setDeliveryDetails(renderVisualizeModal(delivery));
+  }, [isModalOpened, deliveryId, deliveries]);
+
+  useEffect(() => {
+    loadDeliveries();
+  }, []);
+
   return (
-    <Table
-      title="Gerenciando Encomendas"
-      inputPlaceholder="Buscar por encomendas"
-      colunn={colunn}
-      data={formattedDeliveries}
-      loading={isLoading}
-      inputHandleChange={inputChange}
-    />
+    <>
+      <GlobalModal
+        isOpened={isModalOpened}
+        title="Informações da encomenda"
+        closeHandler={() => setIsModalOpened(false)}
+      >
+        {deliveryDetails}
+      </GlobalModal>
+      <Table
+        title="Gerenciando Encomendas"
+        inputPlaceholder="Buscar por encomendas"
+        colunn={colunn}
+        data={formattedDeliveries}
+        loading={isLoading}
+        inputHandleChange={inputChange}
+      />
+    </>
   );
 }

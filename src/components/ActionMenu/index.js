@@ -22,10 +22,17 @@ export default function ActionMenu({ actions }) {
       <ActionList visible={isOpened}>
         {actions.map((action, index) => (
           <Action key={`${action.link}_${String(index)}`}>
-            <Link to={action.link}>
-              {action.icon}
-              {action.title}
-            </Link>
+            {action.type === 'button' ? (
+              <button type="button" onClick={action.onClickButtonHandler}>
+                {action.icon}
+                {action.title}
+              </button>
+            ) : (
+              <Link to={action.link}>
+                {action.icon}
+                {action.title}
+              </Link>
+            )}
           </Action>
         ))}
       </ActionList>
@@ -48,9 +55,11 @@ export default function ActionMenu({ actions }) {
 ActionMenu.propTypes = {
   actions: PropTypes.arrayOf(
     PropTypes.shape({
-      link: PropTypes.string.isRequired,
+      link: PropTypes.string,
       icon: PropTypes.element.isRequired,
       title: PropTypes.string.isRequired,
+      type: PropTypes.string,
+      handleOnClickButton: PropTypes.func,
     })
   ).isRequired,
 };
