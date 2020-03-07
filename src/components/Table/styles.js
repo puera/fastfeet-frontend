@@ -33,22 +33,6 @@ export const Container = styled.div`
       padding: 0 12px;
       border: 1px solid rgba(0, 0, 0, 0.2);
     }
-
-    button {
-      display: flex;
-      align-items: center;
-      background: #7d40e7;
-      border-radius: 4px;
-      border: none;
-      color: #fff;
-      font-size: 14px;
-      font-weight: bold;
-      padding: 7px 16px;
-
-      svg {
-        margin-right: 5px;
-      }
-    }
   }
 `;
 

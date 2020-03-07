@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { MdAdd } from 'react-icons/md';
 
+import Button from '~/components/Global/Button';
+
 import { Container, Content, Spinner } from './styles';
 
 export default function Table({
@@ -10,6 +12,7 @@ export default function Table({
   title,
   inputPlaceholder,
   inputHandleChange,
+  registerButtonHandler,
   loading,
 }) {
   function renderData() {
@@ -43,10 +46,12 @@ export default function Table({
           placeholder={inputPlaceholder}
           onKeyDown={inputHandleChange}
         />
-        <button type="button">
-          <MdAdd color="#fff" size={20} />
+        <Button
+          icon={<MdAdd color="#fff" size={20} />}
+          onClick={registerButtonHandler}
+        >
           CADASTRAR
-        </button>
+        </Button>
       </div>
       {loading ? (
         <Spinner />
@@ -74,4 +79,5 @@ Table.propTypes = {
   inputPlaceholder: PropTypes.string.isRequired,
   inputHandleChange: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  registerButtonHandler: PropTypes.func.isRequired,
 };
