@@ -7,8 +7,9 @@ import { Status, AvatarContainer } from './styles';
 import shortenedName from '~/utils/shortenedName';
 
 import api from '~/services/api';
+import history from '~/services/history';
 
-import GlobalModal from '~/components/GlobalModal';
+import GlobalModal from '~/components/Global/Modal';
 import Table from '~/components/Table';
 import ActionMenu from '~/components/ActionMenu';
 import Avatar from '~/components/Avatar';
@@ -108,6 +109,10 @@ export default function Deliveries() {
     }
   }
 
+  function registerButtonClickedHandler() {
+    history.push('/deliveries/form');
+  }
+
   useMemo(() => {
     function visualizeButtonClickedHandler(id) {
       setDeliveryId(id);
@@ -193,6 +198,7 @@ export default function Deliveries() {
         colunn={colunn}
         data={formattedDeliveries}
         loading={isLoading}
+        registerButtonHandler={registerButtonClickedHandler}
         inputHandleChange={inputChange}
       />
     </>
