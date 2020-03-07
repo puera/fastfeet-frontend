@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Form, Input } from '@rocketseat/unform';
+import { Form } from '@unform/web';
 import * as Yup from 'yup';
 
+import Input from '~/components/Global/Input';
+
 import { signInRequest } from '~/store/modules/auth/actions';
+
+import SchemaValidation from '~/utils/SchemaValidation';
 
 import { Button, Spinner } from './styles';
 
@@ -17,16 +21,19 @@ const schema = Yup.object().shape({
 });
 
 export default function SignIn() {
+  const formRef = useRef();
   const dispatch = useDispatch();
   const loading = useSelector(state => state.auth.loading);
 
-  function handleSubmit({ email, password }) {
-    dispatch(signInRequest(email, password));
+  async function handleSubmit({ email, password }) {
+    if (await SchemaValidation(schema, { email, password }, formRef)) {
+      dispatch(signInRequest(email, password));
+    }
   }
   return (
     <>
       <img src={logo} alt="FastFeet" />
-      <Form schema={schema} onSubmit={handleSubmit}>
+      <Form schema={schema} onSubmit={handleSubmit} ref={formRef}>
         <strong>SEU EMAIL</strong>
         <Input name="email" type="email" placeholder="exemplo@email.com" />
         <strong>SUA SENHA</strong>
