@@ -46,14 +46,6 @@ export default function DeliveryForm() {
     }
   }
 
-  function saveButtonClickedHandler() {
-    formRef.current.submitForm();
-  }
-
-  function goBackButtonClickedHandler() {
-    history.push('/deliveries');
-  }
-
   function loadRecipientsOptions() {
     return api
       .get('recipients')
@@ -62,7 +54,6 @@ export default function DeliveryForm() {
           value: recipient.id,
           label: recipient.name,
         }));
-        console.tron.warn(response.data);
         return options;
       })
       .catch(error => {
@@ -112,8 +103,8 @@ export default function DeliveryForm() {
   return (
     <FormComponent
       title="Cadastro de encomendas"
-      saveButtonHandler={saveButtonClickedHandler}
-      goBackButtonHandler={goBackButtonClickedHandler}
+      saveButtonHandler={() => formRef.current.submitForm()}
+      goBackButtonHandler={() => history.push('/deliveries')}
     >
       <Form ref={formRef} onSubmit={submitHandler}>
         <section>
