@@ -60,17 +60,23 @@ export const Content = styled.table`
       padding: 12px 15px;
       font-size: 16px;
       color: #666;
-      border: none;
-
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      > div {
+        display: flex;
+        align-items: center;
+      }
       &:first-child {
         border-top-left-radius: 4px;
         border-bottom-left-radius: 4px;
+        overflow: visible;
       }
       &:last-child {
         border-bottom-right-radius: 4px;
         border-top-right-radius: 4px;
-        display: flex;
         justify-content: center;
+        overflow: visible;
       }
     }
   }
@@ -83,4 +89,32 @@ export const Spinner = styled(FaSpinner).attrs({
   animation: ${rotate} 2s linear infinite;
   align-self: center;
   margin-top: 50px;
+`;
+
+export const Pagination = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  form {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button {
+      background: 0;
+      padding: 5px;
+      border: none;
+      border-radius: 50%;
+      transition: background 0.2s;
+      width: 50px;
+      height: 50px;
+      &:hover {
+        background: #ddd;
+      }
+    }
+  }
+  span {
+    display: flex;
+    font-weight: bold;
+  }
 `;

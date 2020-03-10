@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import { MdAdd } from 'react-icons/md';
+import { Form } from '@unform/web';
+import { MdAdd, MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
 import Button from '~/components/Global/Button';
 
-import { Container, Content, Spinner } from './styles';
+import { Container, Content, Spinner, Pagination } from './styles';
 
 export default function Table({
   colunn,
@@ -14,7 +15,12 @@ export default function Table({
   inputHandleChange,
   registerButtonHandler,
   loading,
+  currentPage,
+  totalPages,
+  setPage,
 }) {
+  const formRef = useRef();
+
   function renderData() {
     return (
       <>
@@ -37,6 +43,12 @@ export default function Table({
       </>
     );
   }
+
+  function paginationHandler(val) {
+    if (val > 0 && val <= totalPages) {
+      setPage(val);
+    }
+  }
   return (
     <Container>
       <h1>{title}</h1>
@@ -46,13 +58,16 @@ export default function Table({
           placeholder={inputPlaceholder}
           onKeyDown={inputHandleChange}
         />
-        <Button
-          icon={<MdAdd color="#fff" size={20} />}
-          onClick={registerButtonHandler}
-        >
-          CADASTRAR
-        </Button>
+        {registerButtonHandler && (
+          <Button
+            icon={<MdAdd color="#fff" size={20} />}
+            onClick={registerButtonHandler}
+          >
+            CADASTRAR
+          </Button>
+        )}
       </div>
+
       {loading ? (
         <Spinner />
       ) : (
@@ -64,6 +79,25 @@ export default function Table({
           )}
         </>
       )}
+      <Pagination>
+        <Form ref={formRef}>
+          <button
+            type="button"
+            onClick={() => paginationHandler(currentPage - 1)}
+          >
+            <MdChevronLeft color="#333" size={35} />
+          </button>
+          <button
+            type="button"
+            onClick={() => paginationHandler(currentPage + 1)}
+          >
+            <MdChevronRight color="#333" size={35} />
+          </button>
+        </Form>
+        <span>
+          Página {currentPage} de {totalPages}
+        </span>
+      </Pagination>
     </Container>
   );
 }
@@ -79,5 +113,12 @@ Table.propTypes = {
   inputPlaceholder: PropTypes.string.isRequired,
   inputHandleChange: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  registerButtonHandler: PropTypes.func.isRequired,
+  registerButtonHandler: PropTypes.func,
+  currentPage: PropTypes.number.isRequired,
+  totalPages: PropTypes.number.isRequired,
+  setPage: PropTypes.func.isRequired,
+};
+
+Table.defaultProps = {
+  registerButtonHandler: null,
 };
