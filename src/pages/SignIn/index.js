@@ -11,7 +11,7 @@ import SchemaValidation from '~/utils/SchemaValidation';
 
 import { Button, Spinner } from './styles';
 
-import logo from '~/assets/img/fastfeet-logo.png';
+import logo from '~/assets/img/fastfeet-logo.svg';
 
 const schema = Yup.object().shape({
   email: Yup.string()

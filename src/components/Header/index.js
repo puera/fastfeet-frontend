@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import logo from '~/assets/img/fastfeet-logo.png';
+import logo from '~/assets/img/fastfeet-logo.svg';
 
 import { signOut } from '~/store/modules/auth/actions';
 
@@ -31,9 +30,8 @@ export default function Header() {
         </Menu>
         <aside>
           <Profile>
-            <Link to="/profile">
-              <strong>{profile.name}</strong>
-            </Link>
+            <strong>{profile.name}</strong>
+
             <button type="button" onClick={handleSignOut}>
               Sair do Sistema
             </button>
