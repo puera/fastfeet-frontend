@@ -7,7 +7,7 @@ import history from '~/services/history';
 
 import shortenedName from '~/utils/shortenedName';
 
-import Dropdown from '~/components/ActionMenu';
+import ActionMenu from '~/components/ActionMenu';
 import Table from '~/components/Table';
 import Avatar from '~/components/Avatar';
 import AvatarPlaceholder from '~/components/Avatar/AvatarPlaceholder';
@@ -96,7 +96,7 @@ export default function Deliveryman() {
       renderDeliveryman(deliveryman.name, deliveryman.avatar),
       deliveryman.name,
       deliveryman.email,
-      <Dropdown actions={renderActions(deliveryman.id)} />,
+      <ActionMenu actions={renderActions(deliveryman.id)} />,
     ]);
 
     setFormattedDeliverymen(data);

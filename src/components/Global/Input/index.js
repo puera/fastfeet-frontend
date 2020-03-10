@@ -5,10 +5,10 @@ import { useField } from '@unform/core';
 import ErrorMessage from '~/components/Global/ErrorMessage';
 import Label from '~/components/Global/Label';
 
-import { Container, StyledInput } from './styles';
+import { Container } from './styles';
 
 export default function Input({ name, label, ...rest }) {
-  const inputRef = useRef(null);
+  const inputRef = useRef();
   const { fieldName, defaultValue = '', registerField, error } = useField(name);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function Input({ name, label, ...rest }) {
   return (
     <Container>
       <Label htmlFor={name}>{label}</Label>
-      <StyledInput ref={inputRef} defaultValue={defaultValue} {...rest} />
+      <input ref={inputRef} defaultValue={defaultValue} {...rest} />
       {error && <ErrorMessage>{error}</ErrorMessage>}
     </Container>
   );
