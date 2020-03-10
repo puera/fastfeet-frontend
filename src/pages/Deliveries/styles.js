@@ -6,6 +6,7 @@ export const Status = styled.div`
     background: ${props => lighten(0.3, props.color)};
     border-radius: 25px;
     display: flex;
+    width: 135px;
     align-items: center;
     color: ${props => props.color};
     padding: 5px 0 5px 10px;

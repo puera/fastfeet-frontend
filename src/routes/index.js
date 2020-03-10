@@ -42,6 +42,7 @@ export default function Routes() {
       />
 
       <Route path="/problems" component={Problems} isPrivate />
+      <Route path="/" component={() => <h1>404</h1>} />
     </Switch>
   );
 }

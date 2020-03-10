@@ -28,6 +28,9 @@ const colunn = [
 ];
 
 export default function Deliveries() {
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   const [deliveries, setDeliveries] = useState([]);
   const [formattedDeliveries, setFormattedDeliveries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,11 +57,14 @@ export default function Deliveries() {
     );
   }
 
-  async function loadDeliveries(query) {
+  async function loadDeliveries(query, pageToLoad) {
     setIsLoading(true);
     try {
-      const response = await api.get(`deliveries?q=${query || ''}`);
-      setDeliveries(response.data);
+      const response = await api.get('deliveries', {
+        params: { page: pageToLoad, q: query },
+      });
+      setDeliveries(response.data.deliveries);
+      setTotalPages(Math.ceil(response.data.count / 5));
     } catch (error) {
       toast.error('API Error');
       console.tron.error(error);
@@ -109,10 +115,6 @@ export default function Deliveries() {
     }
   }
 
-  function registerButtonClickedHandler() {
-    history.push('/deliveries/form');
-  }
-
   useMemo(() => {
     function visualizeButtonClickedHandler(id) {
       setDeliveryId(id);
@@ -125,6 +127,11 @@ export default function Deliveries() {
           await api.delete(`deliveries/${id}`);
           toast.success('Encomenda excluída com sucesso!');
           loadDeliveries();
+          if (deliveries.length > 1) {
+            loadDeliveries(null, page);
+          } else {
+            setPage(page - 1);
+          }
         }
       } catch (error) {
         toast.error('Erro ao excluir encomenda.');
@@ -169,7 +176,7 @@ export default function Deliveries() {
     ]);
 
     setFormattedDeliveries(data);
-  }, [deliveries]);
+  }, [deliveries, page]);
 
   useEffect(() => {
     if (deliveryId === null || isModalOpened === false) return;
@@ -180,8 +187,8 @@ export default function Deliveries() {
   }, [isModalOpened, deliveryId, deliveries]);
 
   useEffect(() => {
-    loadDeliveries();
-  }, []);
+    loadDeliveries(null, page);
+  }, [page]);
 
   return (
     <>
@@ -198,8 +205,11 @@ export default function Deliveries() {
         colunn={colunn}
         data={formattedDeliveries}
         loading={isLoading}
-        registerButtonHandler={registerButtonClickedHandler}
+        registerButtonHandler={() => history.push('/deliveries/form')}
         inputHandleChange={inputChange}
+        currentPage={page}
+        totalPages={totalPages}
+        setPage={setPage}
       />
     </>
   );

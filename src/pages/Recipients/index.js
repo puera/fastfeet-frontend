@@ -11,15 +11,21 @@ import Table from '~/components/Table';
 const colunn = ['ID', 'Nome', 'Endereço', 'Ações'];
 
 export default function Recipient() {
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   const [recipients, setRecipients] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [formattedRecipients, setFormattedRecipients] = useState([]);
 
-  async function loadRecipients(query) {
+  async function loadRecipients(query, pageToLoad) {
     setIsLoading(true);
     try {
-      const response = await api.get(`recipients?q=${query || ''}`);
-      setRecipients(response.data);
+      const response = await api.get('recipients', {
+        params: { page: pageToLoad, q: query },
+      });
+      setRecipients(response.data.recipients);
+      setTotalPages(Math.ceil(response.data.count / 5));
     } catch (error) {
       toast.error('API Error');
       console.tron.error(error);
@@ -38,11 +44,16 @@ export default function Recipient() {
   useMemo(() => {
     async function deleteButtonClickedHandler(id) {
       try {
-        if (window.confirm('Deseja mesmo deletar este item?')) {
+        if (window.confirm('Deseja deletar este destinatário?')) {
           await api.delete(`recipients/${id}`);
           toast.success('Destinatário excluído com sucesso!');
+          loadRecipients();
+          if (recipients.length > 1) {
+            loadRecipients(null, page);
+          } else {
+            setPage(page - 1);
+          }
         }
-        loadRecipients();
       } catch (error) {
         toast.error('Erro ao excluir destinatário.');
       }
@@ -72,11 +83,11 @@ export default function Recipient() {
     ]);
 
     setFormattedRecipients(data);
-  }, [recipients]);
+  }, [page, recipients]);
 
   useEffect(() => {
-    loadRecipients();
-  }, []);
+    loadRecipients(null, page);
+  }, [page]);
 
   return (
     <Table
@@ -87,6 +98,9 @@ export default function Recipient() {
       loading={isLoading}
       registerButtonHandler={() => history.push('/recipients/form')}
       data={formattedRecipients}
+      currentPage={page}
+      totalPages={totalPages}
+      setPage={setPage}
     />
   );
 }

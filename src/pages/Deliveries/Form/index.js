@@ -50,7 +50,7 @@ export default function DeliveryForm() {
     return api
       .get('recipients')
       .then(response => {
-        const options = response.data.map(recipient => ({
+        const options = response.data.recipients.map(recipient => ({
           value: recipient.id,
           label: recipient.name,
         }));
@@ -65,7 +65,7 @@ export default function DeliveryForm() {
     return api
       .get('delivermans')
       .then(response => {
-        const options = response.data.map(deliveryman => ({
+        const options = response.data.delivermans.map(deliveryman => ({
           value: deliveryman.id,
           label: deliveryman.name,
         }));

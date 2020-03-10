@@ -17,7 +17,10 @@ import { AvatarContainer } from './styles';
 const colunn = ['ID', 'Foto', 'Nome', 'E-mail', 'Ações'];
 
 export default function Deliveryman() {
-  const [deliverymen, setDeliverymen] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const [deliverymans, setDeliverymans] = useState([]);
   const [formattedDeliverymen, setFormattedDeliverymen] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,11 +41,14 @@ export default function Deliveryman() {
     );
   }
 
-  async function loadDeliverymen(query) {
+  async function loadDeliveryman(query, pageToLoad) {
     setIsLoading(true);
     try {
-      const response = await api.get(`delivermans?q=${query || ''}`);
-      setDeliverymen(response.data);
+      const response = await api.get('delivermans', {
+        params: { page: pageToLoad, q: query },
+      });
+      setDeliverymans(response.data.delivermans);
+      setTotalPages(Math.ceil(response.data.count / 5));
     } catch (error) {
       toast.error('API Error');
       console.tron.error(error);
@@ -53,13 +59,9 @@ export default function Deliveryman() {
   function inputChange(e) {
     // checks if enter was pressed (code: 13)
     if (e.keyCode === 13) {
-      loadDeliverymen(e.target.value);
+      loadDeliveryman(e.target.value);
       e.target.value = '';
     }
-  }
-
-  function registerButtonClickedHandler() {
-    history.push('/deliverymans/form');
   }
 
   useMemo(() => {
@@ -68,7 +70,12 @@ export default function Deliveryman() {
         if (window.confirm('Deseja mesmo deletar este entregador?')) {
           await api.delete(`delivermans/${id}`);
           toast.success('Entregador excluído com sucesso!');
-          loadDeliverymen();
+          loadDeliveryman();
+          if (deliverymans.length > 1) {
+            loadDeliveryman(null, page);
+          } else {
+            setPage(page - 1);
+          }
         }
       } catch (error) {
         toast.error('Erro ao excluir entregador.');
@@ -91,7 +98,7 @@ export default function Deliveryman() {
       ];
     }
 
-    const data = deliverymen.map(deliveryman => [
+    const data = deliverymans.map(deliveryman => [
       `#${deliveryman.id}`,
       renderDeliveryman(deliveryman.name, deliveryman.avatar),
       deliveryman.name,
@@ -100,11 +107,11 @@ export default function Deliveryman() {
     ]);
 
     setFormattedDeliverymen(data);
-  }, [deliverymen]);
+  }, [deliverymans, page]);
 
   useEffect(() => {
-    loadDeliverymen();
-  }, []);
+    loadDeliveryman(null, page);
+  }, [page]);
 
   return (
     <Table
@@ -112,9 +119,12 @@ export default function Deliveryman() {
       inputHandleChange={inputChange}
       inputPlaceholder="Buscar por entregadores"
       colunn={colunn}
-      registerButtonHandler={registerButtonClickedHandler}
+      registerButtonHandler={() => history.push('/deliverymans/form')}
       data={formattedDeliverymen}
       loading={isLoading}
+      currentPage={page}
+      totalPages={totalPages}
+      setPage={setPage}
     />
   );
 }
