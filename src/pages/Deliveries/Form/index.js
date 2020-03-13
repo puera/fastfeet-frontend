@@ -46,9 +46,9 @@ export default function DeliveryForm() {
     }
   }
 
-  function loadRecipientsOptions() {
+  function loadRecipientsOptions(query) {
     return api
-      .get('recipients')
+      .get('recipients', { params: { q: query } })
       .then(response => {
         const options = response.data.recipients.map(recipient => ({
           value: recipient.id,
@@ -61,9 +61,9 @@ export default function DeliveryForm() {
       });
   }
 
-  function loadDeliverymanOptions() {
+  function loadDeliverymanOptions(query) {
     return api
-      .get('delivermans')
+      .get('delivermans', { params: { q: query } })
       .then(response => {
         const options = response.data.delivermans.map(deliveryman => ({
           value: deliveryman.id,

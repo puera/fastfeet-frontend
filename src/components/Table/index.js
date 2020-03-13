@@ -80,6 +80,9 @@ export default function Table({
         </>
       )}
       <Pagination>
+        <span>
+          Página {currentPage} de {totalPages}
+        </span>
         <Form ref={formRef}>
           <button
             type="button"
@@ -94,9 +97,6 @@ export default function Table({
             <MdChevronRight color="#333" size={35} />
           </button>
         </Form>
-        <span>
-          Página {currentPage} de {totalPages}
-        </span>
       </Pagination>
     </Container>
   );

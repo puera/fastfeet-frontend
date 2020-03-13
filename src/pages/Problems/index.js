@@ -92,7 +92,7 @@ export default function Problem() {
     }
 
     const data = problems.map(problem => [
-      `#${problem.id}`,
+      `#${problem.delivery.id}`,
       problem.description,
       <ActionMenu
         actions={renderActions(problem.id, problem.delivery.canceled_at)}
