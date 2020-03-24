@@ -69,7 +69,7 @@ export default function Problem() {
       }
     }
 
-    function renderActions(id, canceled) {
+    function renderActions(id, canceled, delivered) {
       const action = [
         {
           title: 'Visualizar',
@@ -79,7 +79,7 @@ export default function Problem() {
         },
       ];
 
-      if (!canceled) {
+      if (!canceled && !delivered) {
         action.push({
           title: 'Cancelar',
           icon: <MdDeleteForever color="#DE3B3B" size={16} />,
@@ -95,7 +95,11 @@ export default function Problem() {
       `#${problem.delivery.id}`,
       problem.description,
       <ActionMenu
-        actions={renderActions(problem.id, problem.delivery.canceled_at)}
+        actions={renderActions(
+          problem.id,
+          problem.delivery.canceled_at,
+          problem.delivery.end_date
+        )}
       />,
     ]);
 
