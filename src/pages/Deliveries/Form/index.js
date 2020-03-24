@@ -46,11 +46,11 @@ export default function DeliveryForm() {
     }
   }
 
-  function loadRecipientsOptions(query) {
-    return api
+  async function loadRecipientsOptions(query) {
+    const response = await api
       .get('recipients', { params: { q: query } })
-      .then(response => {
-        const options = response.data.recipients.map(recipient => ({
+      .then(resp => {
+        const options = resp.data.recipients.map(recipient => ({
           value: recipient.id,
           label: recipient.name,
         }));
@@ -59,13 +59,14 @@ export default function DeliveryForm() {
       .catch(error => {
         console.tron.log(error);
       });
+    return response;
   }
 
-  function loadDeliverymanOptions(query) {
-    return api
+  async function loadDeliverymanOptions(query) {
+    const response = await api
       .get('delivermans', { params: { q: query } })
-      .then(response => {
-        const options = response.data.delivermans.map(deliveryman => ({
+      .then(resp => {
+        const options = resp.data.delivermans.map(deliveryman => ({
           value: deliveryman.id,
           label: deliveryman.name,
         }));
@@ -75,6 +76,7 @@ export default function DeliveryForm() {
       .catch(error => {
         console.tron.log(error);
       });
+    return response;
   }
 
   useMemo(() => {
