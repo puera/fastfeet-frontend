@@ -19,7 +19,7 @@ AvatarPlaceholder.propTypes = {
 };
 
 AvatarPlaceholder.defaultProps = {
-  color: '#333',
+  color: '#7159c1',
   size: 35,
   fontSize: 16,
 };
